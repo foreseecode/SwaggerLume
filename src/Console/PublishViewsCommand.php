@@ -28,12 +28,20 @@ class PublishViewsCommand extends Command
      */
     public function fire()
     {
-        $this->info('Publishing view files');
+        $default = realpath(__DIR__ . '/../../resources/views/') . '/index.blade.php';
+        $file = config('swagger-lume.paths.blade', $default);
+        if ($file !== false) {
+            $this->info('Publishing view files');
 
-        (new Publisher($this))->publishFile(
-            realpath(__DIR__.'/../../resources/views/').'/index.blade.php',
-            config('swagger-lume.paths.views'),
-            'index.blade.php'
-        );
+            if ($file === true) {
+                $file = $default;
+            }
+
+            (new Publisher($this))->publishFile(
+                $file,
+                config('swagger-lume.paths.views'),
+                'index.blade.php'
+            );
+        }
     }
 }
